@@ -11,16 +11,17 @@ from dataset.synthetic_dataset import DatasetCheckerboard
 def main():
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
     print(f"Using device: {device}")
-    writer = SummaryWriter(log_dir="logs/cfm_mlp_checkerboard")
-
+    
     # Initialize training parameters
-    batch_size = 64
+    batch_size = 512
     lr = 1e-3
     iterations = 30000
+    hidden_dim = 128
+    writer = SummaryWriter(log_dir=f"logs/cfm_mlp_checkerboard_bs{batch_size}_hd{hidden_dim}")
 
     # Initialize dataset and model
     dataset = DatasetCheckerboard(device=device)
-    flow = MLP().to(device)
+    flow = MLP(hidden_dim=hidden_dim).to(device)
     optimizer = torch.optim.AdamW(flow.parameters(), lr=lr)
 
     for step in range(iterations):
